@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+tmp/
+data/
+.pytest_cache/
+diagnostics/
+results/
+upstream/

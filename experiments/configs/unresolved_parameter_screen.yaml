@@ -1,0 +1,28 @@
+# Independent experimental screening. Values are NOT claimed as paper settings.
+base_config: ../../configs/btsp_cam_cifar100.yaml
+screen_tasks: 10
+full_tasks: 20
+readout: coordinate_aligned_unthresholded
+families:
+  k: [16, 24, 32, 41, 64, 96, 128]
+  p: [0.1, 0.25, 0.5, 0.75, 1.0]
+  f_q_base: [0.001, 0.0025, 0.005, 0.01, 0.02]
+  beta: [0.5, 1.0, 2.0, 5.0, 10.0]
+  gamma: [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0]
+  lambda:
+    L0: {current: 0.0, inactive: 0.0}
+    L1: {current: 0.01, inactive: 0.01}
+    L2: {current: 0.01, inactive: 0.01}
+    L3: {current: 0.05, inactive: 0.05}
+    L4: {current: 0.1, inactive: 0.1}
+    L5: {current: 0.0, inactive: 0.01}
+    L6: {current: 0.01, inactive: 0.05}
+outputs:
+  screen_csv: ../../diagnostics/parameter_screen_task10.csv
+  full_csv: ../../diagnostics/parameter_candidates_full20.csv
+# Frozen after reviewing the complete Task1-10 multi-metric screen. The joint
+# candidate combines the k-family and lambda-family representatives, not a
+# search against the paper's reported accuracy.
+joint_candidates:
+  - {name: joint_k128_L0, family: joint, k: 128, p: 0.5, f_q_base: 0.005, beta: 1.0, gamma: 0.1, lambda_current: 0.0, lambda_inactive: 0.0}
+selected_full20: [baseline, k_128, L0, joint_k128_L0, f_q_base_0.001]

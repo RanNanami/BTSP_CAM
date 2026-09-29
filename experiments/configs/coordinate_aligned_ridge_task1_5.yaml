@@ -1,0 +1,6 @@
+# Experimental repair, independent of the formal reproduction path.
+base_config: ../../configs/btsp_cam_cifar100.yaml
+tasks: 5
+variant: coordinate_aligned_ridge
+readout: unthresholded_overlap
+output_csv: ../../diagnostics/coordinate_aligned_ridge.csv

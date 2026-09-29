@@ -1,0 +1,7 @@
+# Replay-oracle diagnostic only. No formal or coordinate-aligned settings change.
+base_config: ../../configs/btsp_cam_cifar100.yaml
+tasks: 20
+readout: current_WB_replay_oracle
+tau_grid: [0, 0.005, 0.01, 0.02, 0.03, 0.05, 0.075, 0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50]
+sweep_csv: ../../diagnostics/aligned_tau_sweep_full20.csv
+scale_csv: ../../diagnostics/a_scale_evolution_full20.csv

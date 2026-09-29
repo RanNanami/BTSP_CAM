@@ -1,0 +1,12 @@
+# Independent readout-only diagnostic. Not a BTSP-CAM author configuration.
+base_config: ../../configs/btsp_cam_cifar100.yaml
+baseline_gamma: 0.1
+spectrum_k: [41, 128, 160]
+spectrum_tasks: [1, 5, 10, 15, 20]
+fixed_gamma_k: 128
+fixed_gamma_tasks: 10
+fixed_gamma_multipliers: [0, 0.01, 0.1, 1, 10, 100]
+normalized_k: [128, 160]
+normalized_tasks: 20
+alpha_reference: {k: 128, task: 1}
+methods: [FIXED_GAMMA, TRACE_NORMALIZED, MAX_NORMALIZED]

@@ -1,0 +1,22 @@
+# Predeclared before accessing any new-k validation outcome or test split.
+# Independent repaired-pipeline experiment; never a formal/paper config.
+base_config: ../../configs/btsp_cam_cifar100.yaml
+grid: [128, 160, 192, 224, 256, 320, 384, 512, 768, 1024]
+control_k: [128, 160]
+code_dim: 8192
+class_order_seed: 1993
+rf_seed: 1993
+writer_seed: 1993
+validation_split_seed: 20260928
+validation_fraction: 0.20
+validation_tasks: 5
+tie_tolerance_percentage_points: 0.10
+primary_selection_metric: task1_5_mean_cumulative_train_side_validation_accuracy
+readout: coordinate_aligned_ridge
+tau: 0.0
+gamma: 0.1
+neighbor_policy: adjacent_grid_values_locked_before_test
+outputs:
+  validation: ../../diagnostics/k_extended_validation.csv
+  full20: ../../diagnostics/k_extended_full20.csv
+  selection_lock: ../../diagnostics/k_extended_selection_lock.json

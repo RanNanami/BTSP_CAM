@@ -1,0 +1,9 @@
+# Independent diagnostic only. Formal model/config/checkpoints are read-only.
+base_config: ../../configs/btsp_cam_cifar100.yaml
+tasks: 5
+ca1: unthresholded_overlap
+density_matched_seeds: [199301, 199302, 199303]
+degree_matched_seeds: [199304, 199305, 199306]
+degree_swaps_per_edge: 5
+oracle_csv: ../../diagnostics/current_wb_oracle_ridge.csv
+controls_csv: ../../diagnostics/fixed_memory_controls.csv

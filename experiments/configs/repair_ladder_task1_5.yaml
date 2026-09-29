@@ -1,0 +1,12 @@
+# Isolated diagnostic; the formal config and checkpoints are never written.
+base_config: ../../configs/btsp_cam_cifar100.yaml
+tasks: 5
+ca1: unthresholded_overlap
+center: task1_train_mean_frozen
+branches:
+  REF: sparse_ridge_archived_reference
+  R0: raw_codes_evolving_wb
+  R1: raw_codes_wb_frozen_after_task1
+  R2: task1_centered_codes_evolving_wb
+  R3: task1_centered_codes_wb_frozen_after_task1
+output_csv: ../../diagnostics/repair_ladder_task1_5.csv

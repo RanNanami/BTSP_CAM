@@ -1,0 +1,21 @@
+# Predeclared independent diagnostic families. None is claimed as an author rule.
+base_config: ../../configs/btsp_cam_cifar100.yaml
+readout: coordinate_aligned_tau0
+class_order_seed: 1993
+families:
+  L0: {current: 0.0, other: 0.0}
+  L_FIXED_SMALL: {current: 0.001, other: 0.001}
+  L_FIXED_01: {current: 0.01, other: 0.01}
+  L_FIXED_05: {current: 0.05, other: 0.05}
+  L_FIXED_10: {current: 0.10, other: 0.10}
+  L_CURRENT_PROTECTED: {current: 0.0, other: 0.01}
+  L_CURRENT_FAST: {current: 0.01, other: 0.05}
+# L_CURRENT_FAST is the sole predeclared full20 state-dependent variant.
+# Advance only if Task10 shows a >=0.05 F shift, >=20% write-count shift,
+# or >=2 percentage-point WB-density shift versus fixed 0.01. These are
+# mechanism criteria, not a test-accuracy selection rule.
+full20_families: [L_FIXED_01, L_CURRENT_FAST]
+full20_mechanism_trigger:
+  absolute_F_shift: 0.05
+  relative_gross_flips_shift: 0.20
+  absolute_WB_density_shift: 0.02

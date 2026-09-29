@@ -1,0 +1,14 @@
+# Independent diagnostic, never the formal reproduction configuration.
+base_config: ../../configs/btsp_cam_cifar100.yaml
+k_primary: 128
+k_crosscheck: 160
+task10_p: [0.10, 0.25, 0.50, 0.75, 1.00]
+baseline_p: 0.50
+full20_contrast_p: 1.00  # maximal XOR probability, predeclared without accuracy
+full20_contrast_mode: equal_budget
+readout: coordinate_aligned_tau0
+task10_trigger:
+  cumulative_accuracy_absolute: 0.005
+  a_cosine_margin_relative: 0.15
+  equal_budget_WB_density_absolute: 0.02
+  old_query_functional_drift_relative: 0.15

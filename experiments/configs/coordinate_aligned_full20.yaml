@@ -1,0 +1,8 @@
+# Experimental scaling test only; the formal reproduction config is untouched.
+base_config: ../../configs/btsp_cam_cifar100.yaml
+variant: coordinate_aligned_ridge
+tasks: 20
+readout: unthresholded_overlap
+oracle_checkpoints: [1, 5, 10, 15, 20]
+full20_csv: ../../diagnostics/coordinate_aligned_full20.csv
+scaling_csv: ../../diagnostics/coordinate_aligned_scaling.csv

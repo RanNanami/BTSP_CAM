@@ -1,0 +1,95 @@
+project:
+  label: INDEPENDENT_BTSP_CAM_CORE_IMPLEMENTATION
+  paper_number_parity: false
+
+protocol:
+  dataset: cifar224
+  init_cls: 5
+  increment: 5
+  tasks: 20
+  shuffle: true
+  seed: 1993
+  memory_size: 0
+  pilot_commit: 7a6e904c5bc5cb7a4e1823b3434020be27469b63
+
+backbone:
+  model: vit_base_patch16_224.augreg_in21k
+  pilot_model_name: vit_base_patch16_224_in21k
+  pretrained: true
+  frozen: true
+  output_dim: 768
+  preprocessing: PILOT_CIFAR224_NO_NORMALIZATION
+
+parameters:
+  feature_dim:
+    value: 768
+    source: PILOT frozen ViT-B/16 output dimension
+    status: PILOT_SPECIFIED
+  code_dim:
+    value: 8192
+    source: BTSP-CAM Section 5.1
+    status: PAPER_SPECIFIED
+  k:
+    value: 41
+    source: round(8192 * simpleBTSP sparse ratio 0.005)
+    status: PLAUSIBLE_INHERITANCE
+  memory_slots:
+    value: 4096
+    source: BTSP-CAM Section 5.1
+    status: PAPER_SPECIFIED
+  num_classes:
+    value: 100
+    source: CIFAR-100 protocol
+    status: PILOT_SPECIFIED
+  base_plateau_probability:
+    value: 0.005
+    source: simpleBTSP default plateau probability
+    status: PLAUSIBLE_INHERITANCE
+  beta:
+    value: 1.0
+    source: non-degenerate two-task real-CIFAR smoke configuration
+    status: LOCAL_CHOICE
+  flip_probability:
+    value: 0.5
+    source: simpleBTSP update probability
+    status: PLAUSIBLE_INHERITANCE
+  eta:
+    value: 1.0
+    source: positive global scale cancels in eligibility cosine
+    status: DERIVED
+  trace_decay:
+    value: 0.01
+    source: non-degenerate two-task real-CIFAR smoke configuration
+    status: LOCAL_CHOICE
+  tau:
+    value: 0.5
+    source: non-degenerate two-task real-CIFAR smoke configuration
+    status: LOCAL_CHOICE
+  gamma:
+    value: 0.1
+    source: non-degenerate two-task real-CIFAR smoke configuration
+    status: LOCAL_CHOICE
+  seed:
+    value: 1993
+    source: BTSP-CAM Section 5.1
+    status: PAPER_SPECIFIED
+
+encoder_batch_size: 128
+
+runtime:
+  data_root: ./data
+  result_dir: ./results/btsp_cam_cifar100
+  feature_cache_dir: ./data/feature_cache_btsp_cam
+  batch_size: 32
+  num_workers: 0
+  checkpoint_compressed: false
+
+engineering_choices:
+  training_feature_cache:
+    enabled: true
+    policy: one seeded PILOT train augmentation per image and task
+    status: ENGINEERING_CHOICE
+  evaluation_feature_cache:
+    enabled: true
+    policy: deterministic PILOT test transform
+    status: PROTOCOL_PRESERVING

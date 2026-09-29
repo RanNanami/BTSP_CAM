@@ -1,0 +1,16 @@
+# Locked before this experiment. These are diagnostic choices, not paper values.
+base_config: ../../configs/btsp_cam_cifar100.yaml
+rf_seeds: [1993, 3001, 7001]
+write_seeds: [1993, 4001, 8001]
+seed_pair_k: [41, 128]
+path_k: [41, 64, 96, 128, 160]
+selection_k: [32, 41, 64, 96, 128, 160]
+validation_split_seed: 20260928
+validation_fraction: 0.20
+selection_primary: task1_5_validation_average_cumulative_accuracy
+selection_tie_break: smaller_k
+write_budget_scalar: 0.3203125 # 41/128, global, fixed before running B4
+write_budget_target: cumulative_gross_flips
+crossed_bootstrap_seed: 1993
+crossed_bootstrap_replicates: 20000
+tasks: 20
