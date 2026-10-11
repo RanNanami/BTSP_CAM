@@ -1,0 +1,27 @@
+status: LOCAL_WORKING_ABLATION_BASELINE
+provenance: train_side_validation_only_not_author_configuration
+dataset: CIFAR100
+protocol: B0-Inc5
+seed: 1993
+class_order_seed: 1993
+rf_seed: 1993
+writer_seed: 1993
+validation_split_seed: 20260928
+m: 8192
+slots: 4096
+k: 96
+q: 4
+tau: 0.041666666666666664
+f_base: 0.005
+beta: 1.0
+lambda: 0.01
+p: 0.5
+gamma: 0.1
+readout_mode: CURRENT_WB_REPLAY_REFIT
+replay_boundary: Historical sparse-code replay aligns nonlinear CA1 features to current
+  W_B; not a strict exemplar-free BTSP-CAM algorithm.
+selection_metric: mean_Task1_5_cumulative_train_side_validation_accuracy
+mean_validation_accuracy: 0.8068466666666666
+same_k_q0_validation_accuracy: 0.8059066666666667
+validation_csv_sha256: dae0e018a1316df04204cbcf599e39dbe0516e3bf329c061af2f1fbbd5e5df98
+overlap_csv_sha256: ef465a2463da55597aa2c1d7a07709218f45db90cc647a13bd5467487e7e0a4a

@@ -1,0 +1,11 @@
+{
+  "tasks": 5,
+  "vit_ridge_final_cumulative_accuracy": 0.9464,
+  "sparse_ridge_final_cumulative_accuracy": 0.6516,
+  "btsp_cam_final_cumulative_accuracy": 0.0396,
+  "vit_to_sparse_drop": 0.29480000000000006,
+  "sparse_to_btsp_drop": 0.612,
+  "largest_task5_drop_transition": "B_sparse_to_C_btsp",
+  "runtime_seconds": 159.6717992000049,
+  "parameter_changes": "none"
+}

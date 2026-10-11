@@ -1,0 +1,52 @@
+{
+  "scope": "Manual visual review of the five same-class cross-split pairs among the dHash top 50; not an exhaustive near-duplicate search",
+  "interpretation": "All pairs follow the official CUB-200-2011 train/test metadata. None has identical file SHA-256. Visual duplication in the source benchmark is distinct from cache or model-update leakage.",
+  "reviewed_pairs": [
+    {
+      "train_path": "026.Bronzed_Cowbird/Bronzed_Cowbird_0074_24045.jpg",
+      "test_path": "026.Bronzed_Cowbird/Bronzed_Cowbird_0025_796213.jpg",
+      "dhash_distance": 0,
+      "manual_assessment": "SAME_PHOTO_DIFFERENT_JPEG",
+      "note": "Same scene and framing; visual content effectively identical, despite different bytes."
+    },
+    {
+      "train_path": "177.Prothonotary_Warbler/Prothonotary_Warbler_0020_174122.jpg",
+      "test_path": "177.Prothonotary_Warbler/Prothonotary_Warbler_0105_174097.jpg",
+      "dhash_distance": 0,
+      "manual_assessment": "SAME_PHOTO_DIFFERENT_JPEG",
+      "note": "Same bird, branch, and framing; visual content effectively identical, despite different bytes."
+    },
+    {
+      "train_path": "080.Green_Kingfisher/Green_Kingfisher_0091_71248.jpg",
+      "test_path": "080.Green_Kingfisher/Green_Kingfisher_0093_71185.jpg",
+      "dhash_distance": 4,
+      "manual_assessment": "NEAR_DUPLICATE_SAME_SCENE",
+      "note": "Same bird and perch with altered framing/watermark; possible image variant."
+    },
+    {
+      "train_path": "197.Marsh_Wren/Marsh_Wren_0141_188796.jpg",
+      "test_path": "197.Marsh_Wren/Marsh_Wren_0108_188788.jpg",
+      "dhash_distance": 5,
+      "manual_assessment": "NEEDS_REVIEW_SAME_SCENE",
+      "note": "Very similar bird and scene but beak/pose differs; may be distinct burst frames."
+    },
+    {
+      "train_path": "166.Golden_winged_Warbler/Golden_Winged_Warbler_0078_794827.jpg",
+      "test_path": "166.Golden_winged_Warbler/Golden_Winged_Warbler_0065_794842.jpg",
+      "dhash_distance": 6,
+      "manual_assessment": "NEEDS_REVIEW_SAME_SCENE",
+      "note": "Same setting with slight bird-position difference; may be distinct burst frames."
+    }
+  ],
+  "different_class_false_positive_example": {
+    "train_path": "143.Caspian_Tern/Caspian_Tern_0072_147667.jpg",
+    "test_path": "084.Red_legged_Kittiwake/Red_Legged_Kittiwake_0048_73770.jpg",
+    "dhash_distance": 1,
+    "manual_assessment": "NOT_A_DUPLICATE",
+    "note": "Visually different birds/scenes; low dHash distance alone is insufficient."
+  },
+  "flagged_same_class_test_images": 5,
+  "task20_flagged_test_images_correct": 5,
+  "maximum_direct_final_accuracy_contribution_if_all_five_were_counted_only_by_memorization_pp": 0.0863,
+  "caveat": "The five-image bound applies only to reviewed candidates; dHash top-50 is not an exhaustive bound on all possible perceptual duplicates."
+}

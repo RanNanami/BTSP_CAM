@@ -4,7 +4,7 @@
 
 ## 1. 来源与术语边界
 
-首要来源：[BTSP-CAM 原论文 PDF](C:/Users/苒苒/Documents/学委/类脑/BTSP/2233_BTSP_CAM_A_Brain_Inspired.pdf)（18 页，包含 Appendix A–F）；继承来源：[simpleBTSP 原论文 PDF](C:/Users/苒苒/Documents/学委/类脑/BTSP/s41467-024-55563-6.pdf)（*Nature Communications*, 2025，18 页）、[其本地 Supplement](C:/Users/苒苒/Documents/学委/类脑/BTSP/supplement.pdf)（12 页）和[本地上游代码](C:/Users/苒苒/Documents/学委/类脑/BTSP/BTSP-CAM-reproduction/upstream/simpleBTSP)。[simpleBTSP 期刊原文](https://www.nature.com/articles/s41467-024-55563-6)可用于核对原论文；未把其他论文的 mV、Ca²⁺ 阈值或稀疏比例换算成 BTSP-CAM 的无量纲 `τ`。
+首要来源：项目研究时提供的 BTSP-CAM 原论文 PDF（18 页，包含 Appendix A–F；未随仓库分发）；继承来源：[simpleBTSP 期刊原文](https://www.nature.com/articles/s41467-024-55563-6)（*Nature Communications*, 2025，18 页）、研究时提供的 Supplement PDF（12 页）和本地 `upstream/simpleBTSP/` 检出代码（未随仓库分发）。未把其他论文的 mV、Ca²⁺ 阈值或稀疏比例换算成 BTSP-CAM 的无量纲 `τ`。
 
 | 来源与页码/section | 必要短引文/公式 | 参数所指 | 生物实验值？ | grid-search/model 参数？ | 具体数值公开？ |
 |---|---|---|---|---|---|
@@ -82,9 +82,9 @@ z_j > 0  ⇔  J > kτ
 
 ## 5. k=128/160 current-WB replay oracle：未运行及原因
 
-用户指定的 oracle 必须输入各 k 的**已存在 `W_B` 轨迹**，再用历史训练 cache 在每个 current `W_B` 下重编码 `z_τ`、重新解 ridge；`τ>0` 时 sparse `C/D` 的线性闭合不再成立，不能拿 coordinate-aligned 解代替 replay oracle。本轮核查了项目的 `.npz/.npy/.pt/.pth/.ckpt` 文件及实验脚本：`results/btsp_cam_cifar100/checkpoint_task*.npz` 和 `diagnostics/wb_checkpoints/WB_task*.npz` 是正式 `k=41`；[`run_k_robustness_and_selection.py`](C:/Users/苒苒/Documents/学委/类脑/BTSP/BTSP-CAM-reproduction/experiments/run_k_robustness_and_selection.py) 的 k=128/160 分支保存逐任务 CSV 指标，**不保存 `W_B` checkpoint**。在项目目录未找到可读取的 k=128 或 k=160 `W_B` 矩阵；旁边 `simpleBTSP` 项目的 Split-MNIST 状态不属于该 CIFAR100 轨迹。
+用户指定的 oracle 必须输入各 k 的**已存在 `W_B` 轨迹**，再用历史训练 cache 在每个 current `W_B` 下重编码 `z_τ`、重新解 ridge；`τ>0` 时 sparse `C/D` 的线性闭合不再成立，不能拿 coordinate-aligned 解代替 replay oracle。本轮核查了项目的 `.npz/.npy/.pt/.pth/.ckpt` 文件及实验脚本：`results/btsp_cam_cifar100/checkpoint_task*.npz` 和 `diagnostics/wb_checkpoints/WB_task*.npz` 是正式 `k=41`；[`run_k_robustness_and_selection.py`](../experiments/run_k_robustness_and_selection.py) 的 k=128/160 分支保存逐任务 CSV 指标，**不保存 `W_B` checkpoint**。在项目目录未找到可读取的 k=128 或 k=160 `W_B` 矩阵；旁边 `simpleBTSP` 项目的 Split-MNIST 状态不属于该 CIFAR100 轨迹。
 
-因此，严格按“使用各自已有轨迹、只读 replay、不重新训练 W_B”的边界，**不能计算**指定 q 扫描的 cumulative/old/current accuracy、CA1 density、sample nonzero fraction、`J` 分布、`z` 幅值或 same/different margin。已有 [`K_ROBUSTNESS_AND_SELECTION.md`](C:/Users/苒苒/Documents/学委/类脑/BTSP/BTSP-CAM-reproduction/docs/K_ROBUSTNESS_AND_SELECTION.md) 的 `τ=0` k=128/160 accuracy 不能推算正 τ oracle。为了不制造数据，本轮没有输出虚构的 replay 表，也没有由别的 k 外推结论。
+因此，严格按“使用各自已有轨迹、只读 replay、不重新训练 W_B”的边界，**不能计算**指定 q 扫描的 cumulative/old/current accuracy、CA1 density、sample nonzero fraction、`J` 分布、`z` 幅值或 same/different margin。已有 [`K_ROBUSTNESS_AND_SELECTION.md`](K_ROBUSTNESS_AND_SELECTION.md) 的 `τ=0` k=128/160 accuracy 不能推算正 τ oracle。为了不制造数据，本轮没有输出虚构的 replay 表，也没有由别的 k 外推结论。
 
 **实证问题 7 的状态：UNRESOLVED。** 尚不能说 positive threshold 在 k=128/160 的 current-WB oracle 下既明显 sparsify 又不损害 classification，也不能说它一定损害。数学上最早可能改变 support 的 τ 分别为 `0.0078125` 和 `0.00625`；实际密度下降和功能收益仍须有对应 `W_B` 轨迹才能测量。
 

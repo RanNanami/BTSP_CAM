@@ -1,0 +1,25 @@
+# Exploratory repaired-pipeline stress test; not a paper or formal configuration.
+base_config: ../../configs/btsp_cam_cifar100.yaml
+initial_grid: [1024, 1536, 2048, 3072, 4096]
+conditional_extension: [5120, 6144, 7168]
+extension_min_gain_percentage_points: 0.20
+extension_max_sparse_margin_drop_fraction: 0.20
+validation_tasks: 5
+validation_split_seed: 20260928
+validation_fraction: 0.20
+class_order_seed: 1993
+rf_seed: 1993
+writer_seed: 1993
+tie_tolerance_percentage_points: 0.10
+base_f_base: 0.005
+equal_write_reference_k: 1024
+readout: coordinate_aligned_ridge
+tau: 0.0
+conditions: [FIXED_FBASE, EQUAL_WRITE_APPROX]
+full20_selection_condition: FIXED_FBASE
+outputs:
+  validation: ../../diagnostics/high_k_stress_validation.csv
+  geometry: ../../diagnostics/high_k_stress_geometry.csv
+  writer: ../../diagnostics/high_k_stress_writer.csv
+  full20: ../../diagnostics/high_k_stress_full20.csv
+  selection_lock: ../../diagnostics/high_k_stress_selection_lock.json

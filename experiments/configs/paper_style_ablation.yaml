@@ -1,0 +1,17 @@
+# Experimental operationalizations of Section 6, not paper-exact code claims.
+frozen_config: ablation_baseline_frozen.yaml
+formal_config: ../../configs/btsp_cam_cifar100.yaml
+source_pdf: ../../../2233_BTSP_CAM_A_Brain_Inspired.pdf
+tasks: 20
+smoke_tasks: 5
+writer_variants: [A1_FIXED_GATE, A2_NO_COLLISION, A3_ONLY_LTP]
+readout_variants: [FULL, A4A_NO_THRESHOLD, A4B_NO_CA1_OPERATOR]
+partial_cue_drop_ratios: [0.0, 0.3, 0.6, 0.8]
+partial_cue_seeds: [2026101001, 2026101002, 2026101003, 2026101004, 2026101005]
+cache_dir: ../../diagnostics/paper_style_ablation_cache
+full_csv: ../../diagnostics/paper_style_ablation_full20.csv
+mechanisms_csv: ../../diagnostics/paper_style_ablation_mechanisms.csv
+familiarity_csv: ../../diagnostics/paper_style_ablation_familiarity.csv
+partial_cue_csv: ../../diagnostics/partial_cue_robustness.csv
+baseline_confirmation_csv: ../../diagnostics/k_tau_full20_confirmation.csv
+baseline_cache: ../../diagnostics/k_tau_joint_cache/k96

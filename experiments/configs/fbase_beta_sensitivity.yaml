@@ -1,0 +1,34 @@
+# Local experimental sensitivity diagnostic. None of these values are
+# asserted to be paper-specified or an author configuration.
+base_config: ../../configs/btsp_cam_cifar100.yaml
+task_count: 5
+class_order_seed: 1993
+rf_seed: 1993
+writer_seed: 1993
+k: 96
+code_dim: 8192
+memory_slots: 4096
+p: 0.5
+lambda: 0.01
+gamma: 0.1
+tau: 0.0
+baseline_f_base: 0.005
+baseline_beta: 1.0
+f_base_grid: [0.00125, 0.0025, 0.005, 0.01, 0.02]
+beta_grid: [0.0, 0.25, 0.5, 1.0, 2.0, 4.0]
+# Grid endpoints cover the largest predeclared mechanism range, not the
+# accuracy-maximizing candidates.
+grid_f_base: [0.00125, 0.005, 0.02]
+grid_beta: [0.0, 1.0, 4.0]
+grid_trigger:
+  task5_accuracy_pp: 0.5
+  task5_wb_density_pp: 2.0
+  gross_flips_per_sample_relative: 0.2
+  q4_q1_plateau_ratio_relative: 0.15
+  task5_a_margin_relative: 0.15
+cache_dir: ../../diagnostics/high_k_mechanism_cache/k96
+archive_csv: ../../diagnostics/k_path_decomposition.csv
+outputs:
+  fbase: ../../diagnostics/fbase_sweep_task1_5.csv
+  beta: ../../diagnostics/beta_sweep_task1_5.csv
+  grid: ../../diagnostics/fbase_beta_grid_task1_5.csv

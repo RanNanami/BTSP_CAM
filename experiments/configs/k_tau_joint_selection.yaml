@@ -1,0 +1,29 @@
+# Predeclared local working-ablation selection; not an author configuration.
+base_config: ../../configs/btsp_cam_cifar100.yaml
+class_order_seed: 1993
+rf_seed: 1993
+writer_seed: 1993
+split_seed: 20260928
+validation_fraction: 0.2
+development_tasks: 5
+full_tasks: 20
+k_candidates: [41, 64, 80, 88, 96]
+q_candidates: [0, 1, 2, 3, 4, 5, 8]
+boundary_extension: [12, 16]
+boundary_gain_pp: 0.20
+tie_tolerance_pp: 0.10
+fixed:
+  m: 8192
+  slots: 4096
+  f_base: 0.005
+  beta: 1.0
+  lambda: 0.01
+  p: 0.5
+  gamma: 0.1
+readout_mode: CURRENT_WB_REPLAY_REFIT
+selection_metric: mean_task1_5_cumulative_train_side_validation_accuracy
+cache_dir: ../../diagnostics/k_tau_joint_cache
+validation_csv: ../../diagnostics/k_tau_validation_grid.csv
+overlap_csv: ../../diagnostics/k_tau_overlap_statistics.csv
+confirmation_csv: ../../diagnostics/k_tau_full20_confirmation.csv
+frozen_config: ablation_baseline_frozen.yaml

@@ -1,0 +1,18 @@
+# Exploratory mechanism controls; these are not formal BTSP-CAM settings.
+base_config: ../../configs/btsp_cam_cifar100.yaml
+ks: [96, 1024, 4096, 6144, 7168]
+memory_ks: [96, 1024, 6144]
+tau_ks: [96, 1024, 6144]
+class_order_seed: 1993
+rf_seed: 1993
+writer_seed: 1993
+f_base: 0.005
+gamma: 0.1
+control_seeds: [2026101001, 2026101002, 2026101003, 2026101004, 2026101005]
+tau_grid: [0.0, 0.1, 0.2, 0.3, 0.4, 0.45, 0.48, 0.5]
+cache_dir: ../../diagnostics/high_k_mechanism_cache
+outputs:
+  sparse: ../../diagnostics/mechanism_sparse_ridge.csv
+  memory: ../../diagnostics/mechanism_wb_controls.csv
+  tau: ../../diagnostics/mechanism_tau_replay_oracle.csv
+  decomposition: ../../diagnostics/mechanism_decomposition.csv

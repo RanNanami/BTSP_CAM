@@ -1,0 +1,43 @@
+# Independent cross-dataset transfer diagnostic; NOT an author configuration.
+status: LOCAL_CIFAR_WORKING_CONFIG_TRANSFER
+source_frozen_lock: ../experiments/configs/ablation_baseline_frozen.yaml
+source_formal_config: btsp_cam_cifar100.yaml
+protocol:
+  dataset: cub
+  data_layout: PILOT_IMAGEFOLDER_TRAIN_TEST
+  classes: 200
+  init_cls: 10
+  increment: 10
+  tasks: 20
+  shuffle: true
+  class_order_seed: 1993
+  pilot_commit: 7a6e904c5bc5cb7a4e1823b3434020be27469b63
+backbone:
+  model: vit_base_patch16_224.augreg_in21k
+  pilot_model_name: vit_base_patch16_224_in21k
+  frozen: true
+  output_dim: 768
+  transform: PILOT_CUB_BUILD_TRANSFORM_NO_NORMALIZE
+parameters:
+  m: 8192
+  slots: 4096
+  k: 96
+  q: 4
+  tau: 0.041666666666666664
+  f_base: 0.005
+  beta: 1.0
+  lambda: 0.01
+  eta: 1.0
+  p: 0.5
+  gamma: 0.1
+  rf_seed: 1993
+  writer_seed: 1993
+readout: CURRENT_WB_REPLAY_REFIT
+readout_paper_exact: false
+runtime:
+  data_root: ../data/cub
+  feature_cache_dir: ../data/feature_cache_cub200
+  sparse_cache_dir: ../diagnostics/cub200_sparse_cache
+  smoke_dir: ../diagnostics/cub200_smoke
+  batch_size: 32
+  num_workers: 0

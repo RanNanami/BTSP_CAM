@@ -1,9 +1,12 @@
-# BTSP-CAM core
+# BTSP-CAM reproduction and research diagnostics
 
-Independent implementation of the BTSP-CAM core model. It is designed to run
-the complete exemplar-free CIFAR-100 class-incremental pipeline; it is **not**
-an exact reproduction of the paper's reported numerical results because several
-method hyperparameters were not published.
+Independent implementation and audit of the BTSP-CAM core model. The formal
+path runs an exemplar-free CIFAR-100 class-incremental pipeline. Separate
+experimental readouts and diagnostics investigate ambiguities in the public
+description; they are **not** claimed as the authors' algorithm or as an exact
+reproduction of the paper's reported results. Start with the
+[current research status](docs/CURRENT_RESEARCH_STATUS.md) and
+[documentation index](docs/README.md).
 
 ## Environment and install
 
@@ -65,31 +68,147 @@ binary-memory activity, CA1 density, ridge solve/condition status, runtime,
 memory use, and an `.npz` checkpoint. Every checkpoint is immediately reloaded
 and checked for identical predictions.
 
-## Current validation
+## Current research status
 
-All 20 formal-size CIFAR-100 tasks have been executed. The model processed all
-50,000 training images task-by-task and evaluated all 10,000 test images after
-Task 20. Every ridge solve succeeded, every task checkpoint produced identical
-predictions after reload, the binary memory invariant held, and CA1 remained
-nonzero. Total task runtime was 5,038.9 seconds (84.0 minutes); peak working set
-was 3.31 GB. Task 1 was also resumed in a separate process to train Task 2.
+### A. Formal paper-description baseline
 
-Final cumulative accuracy was 0.0408 and average incremental accuracy was
-0.05167. These values are reported transparently and were not used to tune the
-unpublished parameters. They must not be presented as competitive or
-paper-parity results.
+The **STRICT PUBLIC-DESCRIPTION BASELINE / FORMAL REPRODUCTION PATH** implements
+the published equations, including literal streaming ridge sufficient
+statistics from Eq. (8), with explicitly documented local choices for
+unpublished hyperparameters. On CIFAR-100 B0-Inc5 its Task20 final cumulative
+accuracy is **4.08%** and its average incremental accuracy is **5.167%**.
+All 20 tasks completed; checkpoint reloads, binary memory, and ridge solves
+passed their checks. This is a reproduction reference, **not** the current
+working baseline or a claim of paper parity. The five-task diagnosis found
+94.64% for ViT ridge, 65.16% for sparse-code ridge, and 3.96% for the full
+thresholded path at Task5; see [performance diagnosis](docs/PERFORMANCE_DIAGNOSIS.md)
+and [CA1 diagnosis](docs/CA1_DIAGNOSIS_ROUND1.md).
 
-The five-task representation/readout diagnosis localizes the largest loss to
-the BTSP-memory/CA1 path: Task-5 cumulative accuracy is 94.64% for ViT ridge,
-65.16% for sparse-code ridge, and 3.96% for full BTSP-CAM. See
-`docs/PERFORMANCE_DIAGNOSIS.md` and the machine-readable files under
-`diagnostics/`. No hyperparameter was changed for this diagnosis.
+### B. Coordinate-consistent experimental readout
 
-The follow-up CA1 diagnosis shows that pre-threshold overlap remains strongly
-readable for the current task: unthresholded overlap ridge reaches 92.40% at
-Task 1 and 94.40% current-task accuracy at Task 5. The configured threshold
-makes 99.4%-100% of current-test CA1 rows zero, while continuing memory updates
-also drift old overlap features. See `docs/CA1_DIAGNOSIS_ROUND1.md`.
+**This is NOT claimed as the paper algorithm.** The binary memory `W_B`
+evolves across tasks, while literal streaming ridge retains historical `A/B`
+formed under earlier CA1 feature coordinates. Experimental coordinate-consistent
+variants recompute or reconstruct readout statistics in the *current* `W_B`
+coordinate system. At `tau=0`, aggregated sparse-code `C/D` statistics give
+an exact exemplar-free algebraic alignment; for positive threshold, the local
+working implementation instead replays historical **training sparse codes**
+and refits ridge. That replay variant is **not strict exemplar-free**. See the
+[paper readout semantics audit](docs/PAPER_READOUT_SEMANTICS_AUDIT.md),
+[coordinate-aligned ridge derivation](docs/COORDINATE_ALIGNED_RIDGE.md), and
+[full20 result](docs/COORDINATE_ALIGNED_FULL20.md).
+
+### C. CIFAR-100 local working baseline
+
+The currently frozen *local experimental* baseline uses `k=96`, discrete
+overlap-count threshold `q=4` (`tau=4/96`), and current-`W_B` historical
+training sparse-code replay/refit. It reaches **85.553%** average incremental
+accuracy and **79.180%** Task20 final accuracy. It was selected by the
+documented training-side validation rule and is neither an author-exact
+configuration nor the formal default. Historical sparse-code replay means
+this result cannot be described as strict exemplar-free. Details:
+[k × q selection and full20 confirmation](docs/K_TAU_JOINT_SELECTION.md).
+
+### D. CUB-200 frozen-parameter transfer
+
+The CIFAR-selected local `k=96, q=4` settings were transferred to the official
+CUB-200 split **without CUB retuning**. Under the same local current-`W_B`
+replay/refit readout, CUB-200 B0-Inc10 reaches **87.8606%** average
+incremental and **80.6006%** Task20 final accuracy: strong frozen-parameter
+cross-dataset transfer under the *local coordinate-consistent readout*.
+This is not a paper-exact or directly paper-Table-1-comparable result, and
+should not be described as “beating the paper.” See the
+[CUB baseline](docs/CUB200_FULL_BASELINE.md),
+[leakage forensic audit](docs/CUB200_LEAKAGE_FORENSIC_AUDIT.md), and
+[readout decomposition](docs/CUB200_READOUT_CAUSAL_DECOMPOSITION.md).
+
+### E. Literal streaming versus coordinate-consistent readout
+
+All values below are percent; `Abar` is the mean of taskwise cumulative
+accuracy and `Final` is the final-task cumulative accuracy. These are local
+diagnostic paths, not assertions about the authors' private implementation.
+
+| Dataset / local readout | Abar | Final |
+|---|---:|---:|
+| CIFAR current-`W_B` replay/refit | 85.553 | 79.180 |
+| CIFAR literal streaming Eq. (8) | 31.934 | 20.630 |
+| CUB current-`W_B` replay/refit | 87.8606 | 80.6006 |
+| CUB literal streaming Eq. (8) | 54.8096 | 33.3276 |
+| CUB stable-`W_B1` streaming control | 84.9342 | 77.2006 |
+
+These diagnostics isolate a temporal coordinate mismatch between evolving
+`W_B` features and historical ridge statistics **in this local pipeline**.
+They do not establish that Eq. (8) is wrong, that the authors omitted an
+alignment step, or that the authors used hidden replay.
+
+### F. k robustness and component diagnostics
+
+The table lists already saved full20 experimental results; entries are not
+one common paper configuration. The k96 row is the frozen `q=4` replay
+baseline; the other rows use `tau=0` coordinate-aligned experimental readouts.
+Class order, RF and writer seeds are fixed at 1993 for these displayed paths.
+
+| k | Local readout | Abar | Final |
+|---:|---|---:|---:|
+| 41 | aligned, `tau=0` | 80.685 | 73.300 |
+| 64 | aligned, `tau=0` | 83.601 | 77.100 |
+| 96 | replay/refit, `q=4` | 85.553 | 79.180 |
+| 128 | aligned, `tau=0` | 86.487 | 80.620 |
+| 160 | aligned, `tau=0` | 86.901 | 81.160 |
+| 768 | aligned, `tau=0` | 89.390 | 83.920 |
+| 1024 | aligned, `tau=0` | 89.552 | 84.340 |
+| 6144 | aligned, `tau=0` | 90.243 | 84.580 |
+| 7168 | aligned, `tau=0` | 89.745 | 83.750 |
+
+Increasing `k` substantially improves sparse/readout representation in the
+tested region, but performance eventually peaks and declines. Under matched
+controls, much of the high-`k` gain is representation/readout-driven; learned
+BTSP `W_B` provides only a modest additional advantage at high `k`. This does
+**not** establish that BTSP learning is useless. See
+[k robustness](docs/K_ROBUSTNESS_AND_SELECTION.md),
+[high-k stress](docs/HIGH_K_STRESS_TEST.md), and
+[mechanism controls](docs/HIGH_K_MECHANISM_DECOMPOSITION.md).
+
+Local Section-6-style component ablations of trace gating, collision term,
+and LTD change Abar by **−0.698/−0.156/−0.078 pp** at k96 and
+**−0.125/−0.043/−0.057 pp** at k1024, respectively. The k1024 Task20 LTD
+effect is about **−0.90 pp**. Strong Section-6-style component effects were
+not recovered under either k=96 or k=1024 with the local coordinate-consistent
+readout. These are documented *local operationalizations*, not paper-exact
+ablations or evidence that the paper's ablation is wrong. See
+[operationalization](docs/PAPER_ABLATION_OPERATIONALIZATION.md),
+[k96 ablation](docs/PAPER_STYLE_COMPONENT_ABLATION.md), and
+[k1024 ablation](docs/CIFAR_K1024_COMPONENT_ABLATION.md).
+
+## Important caveat: prototype stability vs readout consistency
+
+The paper reports CA1 prototype similarity `>0.9` and describes a “slowly
+drifting” CA1 space. In existing **local pre-threshold `a`** CIFAR Task1→20
+diagnostics, class-prototype cosine is approximately 0.914 at k96, 0.924 at
+k128, 0.930 at k160, and 0.966 at k1024. The public Figure-4 prototype
+construction is not fully specified, so these are not paper-exact replicas.
+Prototype stability diagnoses first-order class centers; it does not
+mathematically imply that historical ridge sufficient statistics remain
+aligned. Ridge depends on second-order `Z^T Z` and cross-statistics `Z^T Y`.
+**This does not prove the paper implementation is incorrect.** It shows only
+that prototype similarity alone is insufficient evidence for historical-
+statistic coordinate consistency. See the
+[Figure-4-style drift audit](docs/FIGURE4_STYLE_PROTOTYPE_DRIFT_AUDIT.md)
+and [multi-k writer drift audit](docs/K_WRITER_DRIFT_READONLY_AUDIT.md).
+
+## Reproducibility assets and boundaries
+
+The repository publishes the formal implementation, experimental scripts,
+parameter locks, reports and a curated set of small results. It intentionally
+does **not** publish CIFAR/CUB images, ViT embeddings, sparse-code matrices,
+writer/ridge checkpoints or large forensic logs. Rerunning CUB diagnostics
+requires the official CUB-200-2011 archive, the pinned LAMDA-PILOT checkout
+(`7a6e904c5bc5cb7a4e1823b3434020be27469b63`), and the documented
+pretrained ViT family. Scripts use repository-relative paths and do not embed
+the original machine's directories. The
+[result index](docs/README.md#public-lightweight-result-index) identifies
+which lightweight artifacts are available in a fresh clone; a report's
+local-only detailed artifact is not silently represented as public data.
 
 ## Model API
 
