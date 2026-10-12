@@ -1,0 +1,45 @@
+status: CROSS_DATASET_FIXED_EXPERIMENTAL_TRANSFER
+formal_core_unchanged: true
+protocol:
+  dataset: imagenetr
+  dataset_root: data/imagenet-r
+  layout: PILOT_IMAGEFOLDER_SUPPLIED_TRAIN_TEST
+  classes: 200
+  init_cls: 20
+  increment: 20
+  tasks: 10
+  shuffle: true
+  class_order_seed: 1993
+  pilot_commit: 7a6e904c5bc5cb7a4e1823b3434020be27469b63
+backbone:
+  implementation: PilotFrozenViT
+  model: vit_base_patch16_224.augreg_in21k
+  pilot_model_name: vit_base_patch16_224_in21k
+  frozen: true
+  feature_dim: 768
+  train_transform: PILOT_RRC224_SCALE_005_1_FLIP_TOTENSOR
+  test_transform: PILOT_BICUBIC_RESIZE256_CENTERCROP224_TOTENSOR
+  normalization: NONE
+parameters:
+  code_dim: {value: 8192, source: BTSP_CAM_SECTION_5_1, status: PAPER_SPECIFIED}
+  memory_slots: {value: 4096, source: BTSP_CAM_SECTION_5_1, status: PAPER_SPECIFIED}
+  k: {value: 96, source: CIFAR_FROZEN_LOCAL_WORKING_POINT, status: CROSS_DATASET_FIXED}
+  q: {value: 4, source: CIFAR_FROZEN_LOCAL_WORKING_POINT, status: CROSS_DATASET_FIXED}
+  tau: {value: 0.041666666666666664, source: CIFAR_FROZEN_LOCAL_WORKING_POINT, status: CROSS_DATASET_FIXED}
+  f_q_base: {value: 0.005, source: CIFAR_FROZEN_LOCAL_WORKING_POINT, status: CROSS_DATASET_FIXED}
+  beta: {value: 1.0, source: CIFAR_FROZEN_LOCAL_WORKING_POINT, status: CROSS_DATASET_FIXED}
+  trace_decay: {value: 0.01, source: CIFAR_FROZEN_LOCAL_WORKING_POINT, status: CROSS_DATASET_FIXED}
+  synaptic_p: {value: 0.5, source: CIFAR_FROZEN_LOCAL_WORKING_POINT, status: CROSS_DATASET_FIXED}
+  eta: {value: 1.0, source: CIFAR_FROZEN_LOCAL_WORKING_POINT, status: CROSS_DATASET_FIXED}
+  gamma: {value: 0.1, source: CIFAR_FROZEN_LOCAL_WORKING_POINT, status: CROSS_DATASET_FIXED}
+  seed: {value: 1993, source: BTSP_CAM_SECTION_5_1, status: PAPER_SPECIFIED}
+readouts:
+  main: EXPERIMENTAL_CURRENT_WB_REPLAY_REFIT
+  control: LITERAL_STREAMING_EQ8
+  replay_boundary: NOT_STRICT_EXEMPLAR_FREE_NOT_CLAIMED_AS_PAPER_ALGORITHM
+runtime:
+  feature_cache_dir: cache/imagenet_r/features
+  sparse_replay_dir: experimental_replay_codes/imagenet_r
+  batch_size: 32
+  num_workers: 0
+  feature_dtype: float32

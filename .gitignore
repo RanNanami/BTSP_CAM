@@ -4,6 +4,9 @@ __pycache__/
 tmp/
 data/
 results/
+cache/
+checkpoints/
+experimental_replay_codes/
 upstream/
 
 # Never publish datasets, cached representations, or checkpoint binaries.
@@ -12,6 +15,7 @@ upstream/
 *.pt
 *.pth
 *.ckpt
+*.safetensors
 *.bin
 *.tgz
 *.tar

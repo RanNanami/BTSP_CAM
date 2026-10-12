@@ -8,6 +8,15 @@ reproduction of the paper's reported results. Start with the
 [current research status](docs/CURRENT_RESEARCH_STATUS.md) and
 [documentation index](docs/README.md).
 
+ImageNet-R server infrastructure is ready; a paper-comparable run remains
+conditional on verifying the provenance of PILOT-compatible train/test folders
+(`FINAL_CASE = B`: PILOT expects pre-split data, origin unresolved). The fixed
+k=96 cross-dataset transfer uses an experimental current-W_B replay-refit
+readout alongside a literal Eq.(8) streaming control; neither is a newly claimed
+paper parameter configuration. See the [protocol audit](docs/IMAGENET_R_PROTOCOL_AUDIT.md) and
+[server runbook](docs/IMAGENET_R_SERVER_RUN.md). No ImageNet-R accuracy has
+been produced locally.
+
 ## Environment and install
 
 The validated environment is Windows 11, Python 3.14, CPU PyTorch 2.14,
